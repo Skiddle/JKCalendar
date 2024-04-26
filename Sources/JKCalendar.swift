@@ -204,6 +204,7 @@ public class JKCalendar: UIView {
     fileprivate var contentViewBottomConstraint: NSLayoutConstraint!
     
     private var first = true
+    var reduceOpacityOnDaysWithNoMarks = false
     
     weak var interactionObject: UIScrollView?
     
@@ -233,6 +234,10 @@ public class JKCalendar: UIView {
         super.init(coder: aDecoder)
         setupContentViewUI()
         setupCalendarView()
+    }
+    
+    public func setReduceOpacityOnDaysWithNoMarks() {
+        self.reduceOpacityOnDaysWithNoMarks = true
     }
     
     public override func layoutSubviews() {

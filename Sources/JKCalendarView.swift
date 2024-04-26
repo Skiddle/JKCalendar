@@ -489,6 +489,16 @@ class JKCalendarView: UIView{
                         context?.strokePath()
                     case .dot:
                         let context = UIGraphicsGetCurrentContext()
+                        
+                        var alpha = alpha
+                        if calendar.reduceOpacityOnDaysWithNoMarks {
+                            if month != info.day {
+                                alpha = 0.0
+                            } else {
+                                alpha = 1.0
+                            }
+                        }
+                        
                         context?.setFillColor(mark.color.withAlphaComponent(alpha).cgColor)
                         let diameter: CGFloat = 4
                         let offsetY = info.location.height - 4
@@ -518,7 +528,11 @@ class JKCalendarView: UIView{
                 }) {
                     unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.backgroundColor
                 } else if info.day == month{
-                    unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.textColor
+                    if calendar.reduceOpacityOnDaysWithNoMarks {
+                        unitStrAttrs[NSAttributedString.Key.foregroundColor] = (info.mark != nil) ? calendar.textColor : calendar.textColor.withAlphaComponent(0.3)
+                    } else {
+                        unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.textColor
+                    }
                 } else {
                     unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.textColor.withAlphaComponent(0.3)
                 }
