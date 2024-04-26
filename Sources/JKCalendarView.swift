@@ -534,7 +534,7 @@ class JKCalendarView: UIView{
                         unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.textColor
                     }
                 } else {
-                    unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.textColor.withAlphaComponent(0.3)
+                    unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.reduceOpacityOnDaysWithNoMarks ? calendar.textColor.withAlphaComponent(0) : calendar.textColor.withAlphaComponent(0.3)
                 }
                 
                 let textSize = dayString.size(withAttributes: [NSAttributedString.Key.font: font])
