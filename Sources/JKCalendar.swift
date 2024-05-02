@@ -182,8 +182,8 @@ public class JKCalendar: UIView {
                 calendarView.collapsedValue = collapsedValue
                 contentViewBottomConstraint.constant = collapsedValue
                 
-                previousButton.setTitleColor(previousButton.titleColor(for: .normal)!.withAlphaComponent(1 - collapsedValue / collapsedMaximum), for: .normal)
-                nextButton.setTitleColor(nextButton.titleColor(for: .normal)!.withAlphaComponent(1 - collapsedValue / collapsedMaximum), for: .normal)
+                previousButton.setTitleColor(previousButton.titleColor(for: .normal)!.withAlphaComponent(1), for: .normal)
+                nextButton.setTitleColor(nextButton.titleColor(for: .normal)!.withAlphaComponent(1), for: .normal)
                 
                 if collapsedValue == 0 && oldValue != collapsedValue {
                     delegate?.calendar?(self, didChangedStatus: .expand)
@@ -321,8 +321,8 @@ public class JKCalendar: UIView {
     }
 
     func setupLabels() {
-        monthLabel.text = month.name
-        yearLabel.text = "\(month.year)"
+        monthLabel.text = "\(month.name) \(month.year)"
+        yearLabel.text = ""
 
         previousButton.setTitle(isNearbyMonthNameDisplayed ? month.previous.name : nil, for: .normal)
         nextButton.setTitle(isNearbyMonthNameDisplayed ? month.next.name : nil, for: .normal)
