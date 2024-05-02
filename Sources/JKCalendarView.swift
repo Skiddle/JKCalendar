@@ -458,6 +458,16 @@ class JKCalendarView: UIView{
                 if let mark = info.mark{
                     switch mark.type{
                     case .circle:
+                        
+                        var alpha = alpha
+                        if calendar.reduceOpacityOnDaysWithNoMarks {
+                            if month != info.day {
+                                alpha = 0.0
+                            } else {
+                                alpha = 1.0
+                            }
+                        }
+                        
                         context?.setFillColor(mark.color.withAlphaComponent(alpha).cgColor)
                         let diameter = info.location.height * 5 / 6
                         let rect = CGRect(x: info.location.origin.x + (info.location.width - diameter) / 2,
@@ -468,6 +478,16 @@ class JKCalendarView: UIView{
                         context?.fillPath()
                     case .hollowCircle:
                         context?.setLineWidth(1)
+                        
+                        var alpha = alpha
+                        if calendar.reduceOpacityOnDaysWithNoMarks {
+                            if month != info.day {
+                                alpha = 0.0
+                            } else {
+                                alpha = 1.0
+                            }
+                        }
+                        
                         context?.setStrokeColor(mark.color.withAlphaComponent(alpha).cgColor)
                         let diameter = info.location.height * 5 / 6
                         let rect = CGRect(x: info.location.origin.x + (info.location.width - diameter) / 2,
@@ -520,14 +540,34 @@ class JKCalendarView: UIView{
                                     NSAttributedString.Key.paragraphStyle: paragraphStyle]
                 
                 if let mark = info.mark, mark.type == .circle{
-                    unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.backgroundColor
+                    
+                    if calendar.reduceOpacityOnDaysWithNoMarks {
+                        if info.day == month {
+                            unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.backgroundColor
+                        } else {
+                            unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.textColor.withAlphaComponent(0)
+                        }
+                    } else {
+                        unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.backgroundColor
+                    }
                 } else if weekInfo.continuousMarksInfo.keys.filter({ (mark) -> Bool in
                     return mark.type == .circle
                 }).contains(where: { (mark) -> Bool in
                     return info.day >= mark.start && info.day <= mark.end
                 }) {
                     unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.backgroundColor
-                } else if info.day == month{
+                } else if let mark = info.mark, mark.type == .hollowCircle {
+                    if calendar.reduceOpacityOnDaysWithNoMarks {
+                        if info.day == month {
+                            unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.textColor.withAlphaComponent(0.3)
+                        } else {
+                            unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.textColor.withAlphaComponent(0)
+                        }
+                    } else {
+                        unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.textColor
+                    }
+                }
+                else if info.day == month{
                     if calendar.reduceOpacityOnDaysWithNoMarks {
                         unitStrAttrs[NSAttributedString.Key.foregroundColor] = (info.mark != nil) ? calendar.textColor : calendar.textColor.withAlphaComponent(0.3)
                     } else {
@@ -568,6 +608,9 @@ class JKCalendarView: UIView{
     func handleTap(_ recognizer: UITapGestureRecognizer) {
         let position = recognizer.location(in: self)
         if let info = dayInfo(tapPosition: position) {
+            if info.day != month && calendar.reduceOpacityOnDaysWithNoMarks {
+                return
+            }
             calendar.delegate?.calendar?(calendar, didTouch: info.day)
         }
     }
