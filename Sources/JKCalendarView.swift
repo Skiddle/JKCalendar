@@ -603,6 +603,10 @@ class JKCalendarView: UIView{
         
         return nil
     }
+    
+    func simulateTapOnDay(day: JKDay) {
+        calendar.delegate?.calendar?(calendar, didTouch: day)
+    }
 
     @objc
     func handleTap(_ recognizer: UITapGestureRecognizer) {

@@ -207,6 +207,7 @@ public class JKCalendar: UIView {
     var reduceOpacityOnDaysWithNoMarks = false
     
     weak var interactionObject: UIScrollView?
+    weak var calendarView: JKCalendarView!
     
     @IBOutlet weak var topView: UIView!
     @IBOutlet weak var weekView: UIView!
@@ -315,9 +316,14 @@ public class JKCalendar: UIView {
         let calendarView = JKCalendarView(calendar: self, month: month)
         calendarView.backgroundColor = backgroundColor
         calendarView.panRecognizer.isEnabled = !isScrollEnabled
-        calendarPageView.setView(calendarView)
+        self.calendarView = calendarView
+        calendarPageView.setView(self.calendarView)
         
         setupLabels()
+    }
+    
+    public func manuallySelectDay(day: JKDay) {
+        self.calendarView.simulateTapOnDay(day: day)
     }
 
     func setupLabels() {
