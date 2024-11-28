@@ -531,7 +531,7 @@ class JKCalendarView: UIView{
                         
                         let element = UIAccessibilityElement(accessibilityContainer: self)
                         element.accessibilityFrame = convert(info.location, to: nil)
-                        element.accessibilityLabel = "\(info.day.day)"
+                        element.accessibilityLabel = "JK-\(info.day.day)"
                         element.accessibilityTraits = .button
                         elements.append(element)
                     }
