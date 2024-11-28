@@ -156,7 +156,8 @@ class JKCalendarView: UIView{
         let context = UIGraphicsGetCurrentContext()
         
         let sortWeeksInfo = weeksInfo[focusWeek + 1 ..< weeksInfo.count] + weeksInfo[0 ... focusWeek]
-        
+        var elements: [UIAccessibilityElement] = []
+
         for weekInfo in sortWeeksInfo{
             let firstDayInfo = weekInfo.daysInfo.first!
             let lastDayInfo = weekInfo.daysInfo.last!
@@ -593,6 +594,9 @@ class JKCalendarView: UIView{
                 dayString.draw(in: textRect, withAttributes: unitStrAttrs)
             }
         }
+        
+        self.accessibilityElements = elements
+
     }
     
     fileprivate func dayInfo(tapPosition: CGPoint) -> JKDayInfo? {
