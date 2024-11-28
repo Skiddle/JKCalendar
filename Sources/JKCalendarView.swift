@@ -528,6 +528,12 @@ class JKCalendarView: UIView{
                                           height: diameter)
                         context?.addEllipse(in: rect)
                         context?.fillPath()
+                        
+                        let element = UIAccessibilityElement(accessibilityContainer: self)
+                        element.accessibilityFrame = convert(info.location, to: nil)
+                        element.accessibilityLabel = "\(info.day.day)"
+                        element.accessibilityTraits = .button
+                        elements.append(element)
                     }
                 }
                 
