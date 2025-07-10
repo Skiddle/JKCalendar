@@ -451,11 +451,32 @@ class JKCalendarView: UIView{
                     context?.addPath(path.cgPath)
                     context?.setFillColor(mark.color.cgColor)
                     context?.fillPath()
+                case .tagSvg:
+                    // Draw a 15x15 SVG image below the text
+                    let svgImage = UIImage(named: "TagWhite")!
+                        let svgSize: CGFloat = 15
+                        let svgX = beginLocation.origin.x + (beginLocation.width - svgSize) / 2
+                        let svgY = beginLocation.origin.y + beginLocation.height - svgSize - 4 // 4pt padding
+                        let svgRect = CGRect(x: svgX, y: svgY, width: svgSize, height: svgSize)
+                        svgImage.draw(in: svgRect)
+                    
                 }
             }
             
             // Draw mark and text
             for info in weekInfo.daysInfo{
+                
+                let dayString = "\(info.day.day)" as NSString
+                let font = UIFont(name: "HelveticaNeue-Medium", size: 13)!
+                let textSize = dayString.size(withAttributes: [NSAttributedString.Key.font: font])
+                let tagIconPadding: CGFloat = 6
+                let dy = (info.location.height - textSize.height) / 2 - (info.mark?.type == .tagSvg ? tagIconPadding+3 : 0)
+                
+                let textRect = CGRect(x: info.location.origin.x,
+                                      y: info.location.origin.y + dy,
+                                      width: info.location.width,
+                                      height: textSize.height)
+                
                 if let mark = info.mark{
                     switch mark.type{
                     case .circle:
@@ -522,7 +543,7 @@ class JKCalendarView: UIView{
                         
                         context?.setFillColor(mark.color.withAlphaComponent(alpha).cgColor)
                         let diameter: CGFloat = 4
-                        let offsetY = info.location.height - 4
+                        let offsetY = info.location.height - tagIconPadding
                         let rect = CGRect(x: info.location.origin.x + (info.location.width - diameter) / 2,
                                           y: info.location.origin.y + offsetY,
                                           width: diameter,
@@ -535,12 +556,23 @@ class JKCalendarView: UIView{
                         element.accessibilityLabel = "JK-\(info.day.day)"
                         element.accessibilityTraits = .button
                         elements.append(element)
+                    case .tagSvg:
+                        let svgImage = UIImage(named: "TagWhite")!.withTintColor(UIColor(red: 60/255, green: 184/255, blue: 176/255, alpha: 1))
+                        
+                        let svgSize: CGFloat = 15
+                        let svgX = info.location.origin.x + (info.location.width - svgSize) / 2
+                        let svgY = textRect.maxY + 2
+                        let svgRect = CGRect(x: svgX, y: svgY, width: svgSize, height: svgSize)
+                        svgImage.draw(in: svgRect)
+
+                        let element = UIAccessibilityElement(accessibilityContainer: self)
+                        element.accessibilityFrame = convert(info.location, to: nil)
+                        element.accessibilityLabel = "JK-\(info.day.day)"
+                        element.accessibilityTraits = .button
+                        elements.append(element)
                     }
                 }
-                
-                let dayString = "\(info.day.day)" as NSString
-                let font = UIFont(name: "HelveticaNeue-Medium", size: 13)!
-                
+                                
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.alignment = .center
                 var unitStrAttrs = [NSAttributedString.Key.font: font,
@@ -584,13 +616,6 @@ class JKCalendarView: UIView{
                     unitStrAttrs[NSAttributedString.Key.foregroundColor] = calendar.reduceOpacityOnDaysWithNoMarks ? calendar.textColor.withAlphaComponent(0) : calendar.textColor.withAlphaComponent(0.3)
                 }
                 
-                let textSize = dayString.size(withAttributes: [NSAttributedString.Key.font: font])
-                let dy = (info.location.height - textSize.height) / 2
-                
-                let textRect = CGRect(x: info.location.origin.x,
-                                      y: info.location.origin.y + dy,
-                                      width: info.location.width,
-                                      height: textSize.height)
                 dayString.draw(in: textRect, withAttributes: unitStrAttrs)
             }
         }

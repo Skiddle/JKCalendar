@@ -29,6 +29,7 @@ public enum JKCalendarMarkType {
     case hollowCircle
     case underline
     case dot
+    case tagSvg
 }
 
 public class JKCalendarMarkObject: NSObject {
