@@ -470,8 +470,8 @@ class JKCalendarView: UIView{
                 let font = UIFont(name: "HelveticaNeue-Medium", size: 13)!
                 let textSize = dayString.size(withAttributes: [NSAttributedString.Key.font: font])
                 let tagIconPadding: CGFloat = 6
-                let dy = (info.location.height - textSize.height) / 2 - (info.mark?.type == .tagSvg ? tagIconPadding+3 : 0)
-                
+                let dy = ((info.location.height - textSize.height) / 2)-2
+
                 let textRect = CGRect(x: info.location.origin.x,
                                       y: info.location.origin.y + dy,
                                       width: info.location.width,
@@ -543,7 +543,7 @@ class JKCalendarView: UIView{
                         
                         context?.setFillColor(mark.color.withAlphaComponent(alpha).cgColor)
                         let diameter: CGFloat = 4
-                        let offsetY = info.location.height - tagIconPadding
+                        let offsetY = info.location.height - tagIconPadding - 2
                         let rect = CGRect(x: info.location.origin.x + (info.location.width - diameter) / 2,
                                           y: info.location.origin.y + offsetY,
                                           width: diameter,
@@ -561,7 +561,7 @@ class JKCalendarView: UIView{
                         
                         let svgSize: CGFloat = 15
                         let svgX = info.location.origin.x + (info.location.width - svgSize) / 2
-                        let svgY = textRect.maxY + 2
+                        let svgY = textRect.maxY + 6
                         let svgRect = CGRect(x: svgX, y: svgY, width: svgSize, height: svgSize)
                         svgImage.draw(in: svgRect)
 
