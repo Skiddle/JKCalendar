@@ -557,8 +557,10 @@ class JKCalendarView: UIView{
                         element.accessibilityTraits = .button
                         elements.append(element)
                     case .tagSvg:
-                        let svgImage = UIImage(named: "TagWhite")!.withTintColor(UIColor(red: 60/255, green: 184/255, blue: 176/255, alpha: 1))
+                        var alpha = 1.0
+                        if info.day != month, calendar.reduceOpacityOnDaysWithNoMarks { alpha = 0 }
                         
+                        let svgImage = UIImage(named: "TagWhite")!.withTintColor(UIColor(red: 60/255, green: 184/255, blue: 176/255, alpha: alpha))
                         let svgSize: CGFloat = 15
                         let svgX = info.location.origin.x + (info.location.width - svgSize) / 2
                         let svgY = textRect.maxY + 6
